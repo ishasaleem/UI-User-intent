@@ -1,17 +1,21 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export function useReEditTracker() {
+  const touched = useRef({});
   const [reEdits, setReEdits] = useState({});
 
-  const handleChange = (field) => {
+  const onBlur = (field) => {
+    touched.current[field] = true;
+  };
+
+  const onChange = (field) => {
+    if (!touched.current[field]) return;
+
     setReEdits((prev) => ({
       ...prev,
-      [field]: prev[field] ? prev[field] + 1 : 1,
+      [field]: (prev[field] || 0) + 1,
     }));
   };
 
-  return {
-    reEdits,
-    handleChange,
-  };
+  return { reEdits, onChange, onBlur };
 }

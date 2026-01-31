@@ -4,25 +4,21 @@ export function useHoverTracker() {
   const hoverStart = useRef({});
   const [hoverDuration, setHoverDuration] = useState({});
 
-  const handleMouseEnter = (field) => {
+  const onEnter = (field) => {
     hoverStart.current[field] = Date.now();
   };
 
-  const handleMouseLeave = (field) => {
+  const onLeave = (field) => {
     const start = hoverStart.current[field];
     if (!start) return;
 
-    const duration = (Date.now() - start) / 1000;
+    const seconds = (Date.now() - start) / 1000;
 
     setHoverDuration((prev) => ({
       ...prev,
-      [field]: (prev[field] || 0) + duration,
+      [field]: +(prev[field] || 0 + seconds).toFixed(2),
     }));
   };
 
-  return {
-    hoverDuration,
-    handleMouseEnter,
-    handleMouseLeave,
-  };
+  return { hoverDuration, onEnter, onLeave };
 }
